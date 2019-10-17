@@ -7,20 +7,20 @@ class App {
     constructor() {
         this.renderer = new Renderer("HOME-FRAGMENT");
         this.ipc = new IPC();
-        this.start();
     }
 
     public run() {
+        this.start();
         this.ipc.server.start();
     }
 
     private start() {
-        this.ipc.serve( () => {
+        this.ipc.serveNet( 8000, () => {
             this.ipc.server.on("message", (data: any, socket: any) => {
                 this.ipc.server.emit(
                     socket,
                     "message",
-                    this.renderer.render(),
+                    this.renderer.render(data),
                 );
             });
         });
