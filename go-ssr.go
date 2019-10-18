@@ -2,6 +2,7 @@ package main
 // TODO : remove POCGW import 
 import (
 	"POCGW/utils"
+	"POCGW/services"
 	"github.com/gorilla/mux"
 	"net/http"
 	"fmt"
@@ -10,13 +11,8 @@ import (
 var con = utils.Connect()
 
 func newsHandler(w http.ResponseWriter, r *http.Request) {
-	name, ok := r.URL.Query()["name"]
-	var ssrResponse string
-	if(!ok || len(name[0]) < 1) {
-		ssrResponse = utils.Send(con, "NEWS-CONTENT", "Emre")	
-	} else {
-		ssrResponse = utils.Send(con, "NEWS-CONTENT", name[0])
-	}
+	news := services.FetchNews2()
+	ssrResponse := utils.Send(con, "NEWS-CONTENT", string(news))
 	w.WriteHeader(http.StatusOK)
 	fmt.Fprintf(w, ssrResponse)
 }

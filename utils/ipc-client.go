@@ -24,8 +24,8 @@ func Connect() net.Conn {
 	fmt.Println("Connected!")
 	return con
 }
-func Send(con net.Conn, messageType string, message string) string {
-	fmt.Fprintf(con, "{ \"type\": \"" + messageType + "\", \"data\": { \"name\": \"" + message + "\" } } \f")
+func Send(con net.Conn, messageType string, data string) string {
+	fmt.Fprintf(con, "{ \"type\": \"" + messageType + "\", \"data\": " + data + " }\f")
 	resp, _ := bufio.NewReader(con).ReadString('\x0c')
 	var ssrResponse SSRResponse
 	json.Unmarshal([]byte(strings.Trim(resp, "\x0c")), &ssrResponse)

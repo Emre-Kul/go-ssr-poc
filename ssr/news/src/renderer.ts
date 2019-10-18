@@ -10,7 +10,7 @@ export class Renderer {
     }
 
     public render(data: any) {
-        const props = { name: data.name };
+        const props = { text: data.text, type: data.type };
         const output = ReactDOM.renderToString(React.createElement(App, props as any));
         return output;
     }
