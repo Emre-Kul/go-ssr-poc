@@ -4,7 +4,7 @@ export class App extends React.Component {
 
     public render() {
         const name = ((this.props) as any).name;
-        return <div>Hello From Home! - Dear {name}</div>;
+        return <div>Hello From NEWS! - Dear {name}</div>;
     }
 
 }
