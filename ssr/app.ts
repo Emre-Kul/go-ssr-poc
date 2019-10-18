@@ -11,6 +11,7 @@ export class App {
 
     public run() {
         this.start();
+        this.ipc.config.logger = () => {};
         this.ipc.server.start();
     }
 

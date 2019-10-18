@@ -5,11 +5,10 @@ import (
 	"fmt"
 	"bufio"
 	"encoding/json"
-	"strings"
+	"time"
 )
-type LOL struct {
-	Data string
-}
+
+var reader *bufio.Reader
 
 type SSRResponse struct {
 	Data string
@@ -22,14 +21,23 @@ func Connect() net.Conn {
     	panic(err)
 	}
 	fmt.Println("Connected!")
+	reader = bufio.NewReader(con)
 	return con
 }
 func Send(con net.Conn, messageType string, data string) string {
 	fmt.Fprintf(con, "{ \"type\": \"" + messageType + "\", \"data\": " + data + " }\f")
-	resp, _ := bufio.NewReader(con).ReadString('\x0c')
-	var ssrResponse SSRResponse
-	json.Unmarshal([]byte(strings.Trim(resp, "\x0c")), &ssrResponse)
-    return ssrResponse.Data
+	con.SetReadDeadline(time.Now().Add(3 * time.Second))
+	message := make([]byte, 4096)
+	length, _ := con.Read(message)
+	if(length > 0) {
+		var ssrResponse SSRResponse
+		// fmt.Println(json.Valid(message[:length-1]))
+		json.Unmarshal(message[:length-1], &ssrResponse)
+		// fmt.Println(string(message[:length-1]))
+    	return ssrResponse.Data
+	}
+	return "<></>"
+	
 }
 
 func Close(con net.Conn) {
